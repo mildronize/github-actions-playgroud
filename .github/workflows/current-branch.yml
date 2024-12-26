@@ -1,0 +1,23 @@
+name: Get Branch Name
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  get-branch-name:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get branch name
+        run: |
+          echo "Full ref: ${{ github.ref }}"
+          BRANCH_NAME=${{ github.ref_name }}
+          echo "Branch name: $BRANCH_NAME"
