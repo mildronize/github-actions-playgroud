@@ -16,8 +16,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Get branch name
+      - name: Determine branch name
         run: |
-          echo "Full ref: ${{ github.ref }}"
-          BRANCH_NAME=${{ github.ref_name }}
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+              echo "BRANCH_NAME=${{ github.event.pull_request.base.ref  }}" >> $GITHUB_ENV
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+              echo "BRANCH_NAME=${{ github.ref_name  }}" >> $GITHUB_ENV
+          else
+              echo "Only push and pull_request events are supported"
+              exit 1
+          fi
+
+      - name: Use branch name
+        run: |
           echo "Branch name: $BRANCH_NAME"
